@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: auto;
+  position: relative;
+  width: 960px;
+}
+
+text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+form {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+</style>
+<form>
+  <label><input type="radio" name="mode" value="grouped"> Agrupado</label>
+  <label><input type="radio" name="mode" value="stacked" checked> Empilhado</label>
+</form>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script>
+
+var data = jQuery.parseJSON('{ "colorPerBand" : 255, "points": [ { "value" : 351 }, { "value" : 28 }, { "value" : 247 }, { "value" : 56 }, { "value" : 37 }, { "value" : 60 }, { "value" : 54 }, { "value" : 22 }, { "value" : 62 }, { "value" : 78 }, { "value" : 34 }, { "value" : 56 }, { "value" : 72 }, { "value" : 47 }, { "value" : 76 }, { "value" : 77 }, { "value" : 59 }, { "value" : 76 }, { "value" : 68 }, { "value" : 50 }, { "value" : 85 }, { "value" : 98 }, { "value" : 59 }, { "value" : 100 }, { "value" : 90 }, { "value" : 59 }, { "value" : 84 }, { "value" : 78 }, { "value" : 62 }, { "value" : 107 }, { "value" : 87 }, { "value" : 79 }, { "value" : 107 }, { "value" : 99 }, { "value" : 84 }, { "value" : 138 }, { "value" : 90 }, { "value" : 78 }, { "value" : 110 }, { "value" : 90 }, { "value" : 93 }, { "value" : 129 }, { "value" : 109 }, { "value" : 101 }, { "value" : 129 }, { "value" : 79 }, { "value" : 86 }, { "value" : 167 }, { "value" : 86 }, { "value" : 93 }, { "value" : 150 }, { "value" : 91 }, { "value" : 75 }, { "value" : 155 }, { "value" : 96 }, { "value" : 101 }, { "value" : 159 }, { "value" : 79 }, { "value" : 109 }, { "value" : 204 }, { "value" : 89 }, { "value" : 120 }, { "value" : 208 }, { "value" : 104 }, { "value" : 104 }, { "value" : 251 }, { "value" : 93 }, { "value" : 118 }, { "value" : 286 }, { "value" : 60 }, { "value" : 103 }, { "value" : 315 }, { "value" : 62 }, { "value" : 109 }, { "value" : 345 }, { "value" : 65 }, { "value" : 115 }, { "value" : 441 }, { "value" : 58 }, { "value" : 106 }, { "value" : 478 }, { "value" : 83 }, { "value" : 106 }, { "value" : 414 }, { "value" : 58 }, { "value" : 114 }, { "value" : 373 }, { "value" : 56 }, { "value" : 97 }, { "value" : 308 }, { "value" : 63 }, { "value" : 87 }, { "value" : 284 }, { "value" : 64 }, { "value" : 89 }, { "value" : 263 }, { "value" : 43 }, { "value" : 86 }, { "value" : 215 }, { "value" : 54 }, { "value" : 81 }, { "value" : 208 }, { "value" : 55 }, { "value" : 83 }, { "value" : 182 }, { "value" : 49 }, { "value" : 80 }, { "value" : 192 }, { "value" : 67 }, { "value" : 91 }, { "value" : 180 }, { "value" : 50 }, { "value" : 78 }, { "value" : 163 }, { "value" : 52 }, { "value" : 76 }, { "value" : 171 }, { "value" : 55 }, { "value" : 73 }, { "value" : 176 }, { "value" : 51 }, { "value" : 61 }, { "value" : 181 }, { "value" : 65 }, { "value" : 77 }, { "value" : 184 }, { "value" : 69 }, { "value" : 51 }, { "value" : 184 }, { "value" : 64 }, { "value" : 62 }, { "value" : 175 }, { "value" : 65 }, { "value" : 51 }, { "value" : 161 }, { "value" : 52 }, { "value" : 47 }, { "value" : 190 }, { "value" : 55 }, { "value" : 62 }, { "value" : 192 }, { "value" : 64 }, { "value" : 55 }, { "value" : 184 }, { "value" : 67 }, { "value" : 52 }, { "value" : 227 }, { "value" : 71 }, { "value" : 47 }, { "value" : 233 }, { "value" : 68 }, { "value" : 55 }, { "value" : 222 }, { "value" : 57 }, { "value" : 55 }, { "value" : 224 }, { "value" : 61 }, { "value" : 57 }, { "value" : 218 }, { "value" : 68 }, { "value" : 73 }, { "value" : 265 }, { "value" : 58 }, { "value" : 71 }, { "value" : 332 }, { "value" : 72 }, { "value" : 68 }, { "value" : 341 }, { "value" : 84 }, { "value" : 43 }, { "value" : 439 }, { "value" : 86 }, { "value" : 67 }, { "value" : 469 }, { "value" : 116 }, { "value" : 59 }, { "value" : 631 }, { "value" : 132 }, { "value" : 67 }, { "value" : 561 }, { "value" : 132 }, { "value" : 64 }, { "value" : 619 }, { "value" : 131 }, { "value" : 58 }, { "value" : 629 }, { "value" : 184 }, { "value" : 64 }, { "value" : 765 }, { "value" : 234 }, { "value" : 68 }, { "value" : 795 }, { "value" : 267 }, { "value" : 60 }, { "value" : 1086 }, { "value" : 302 }, { "value" : 57 }, { "value" : 917 }, { "value" : 293 }, { "value" : 73 }, { "value" : 896 }, { "value" : 409 }, { "value" : 45 }, { "value" : 796 }, { "value" : 365 }, { "value" : 57 }, { "value" : 851 }, { "value" : 422 }, { "value" : 59 }, { "value" : 677 }, { "value" : 352 }, { "value" : 73 }, { "value" : 724 }, { "value" : 393 }, { "value" : 56 }, { "value" : 627 }, { "value" : 401 }, { "value" : 58 }, { "value" : 582 }, { "value" : 358 }, { "value" : 73 }, { "value" : 550 }, { "value" : 320 }, { "value" : 86 }, { "value" : 521 }, { "value" : 399 }, { "value" : 57 }, { "value" : 496 }, { "value" : 364 }, { "value" : 56 }, { "value" : 435 }, { "value" : 344 }, { "value" : 58 }, { "value" : 443 }, { "value" : 314 }, { "value" : 64 }, { "value" : 368 }, { "value" : 322 }, { "value" : 64 }, { "value" : 391 }, { "value" : 291 }, { "value" : 70 }, { "value" : 377 }, { "value" : 336 }, { "value" : 71 }, { "value" : 318 }, { "value" : 265 }, { "value" : 55 }, { "value" : 288 }, { "value" : 340 }, { "value" : 84 }, { "value" : 257 }, { "value" : 375 }, { "value" : 70 }, { "value" : 242 }, { "value" : 403 }, { "value" : 85 }, { "value" : 285 }, { "value" : 450 }, { "value" : 81 }, { "value" : 253 }, { "value" : 488 }, { "value" : 93 }, { "value" : 247 }, { "value" : 466 }, { "value" : 74 }, { "value" : 252 }, { "value" : 492 }, { "value" : 114 }, { "value" : 280 }, { "value" : 479 }, { "value" : 109 }, { "value" : 256 }, { "value" : 541 }, { "value" : 110 }, { "value" : 291 }, { "value" : 539 }, { "value" : 111 }, { "value" : 325 }, { "value" : 614 }, { "value" : 118 }, { "value" : 279 }, { "value" : 693 }, { "value" : 126 }, { "value" : 256 }, { "value" : 796 }, { "value" : 148 }, { "value" : 249 }, { "value" : 860 }, { "value" : 160 }, { "value" : 227 }, { "value" : 901 }, { "value" : 150 }, { "value" : 219 }, { "value" : 889 }, { "value" : 161 }, { "value" : 198 }, { "value" : 794 }, { "value" : 152 }, { "value" : 202 }, { "value" : 770 }, { "value" : 208 }, { "value" : 184 }, { "value" : 670 }, { "value" : 184 }, { "value" : 166 }, { "value" : 644 }, { "value" : 174 }, { "value" : 131 }, { "value" : 564 }, { "value" : 154 }, { "value" : 169 }, { "value" : 583 }, { "value" : 158 }, { "value" : 118 }, { "value" : 557 }, { "value" : 151 }, { "value" : 125 }, { "value" : 483 }, { "value" : 125 }, { "value" : 112 }, { "value" : 504 }, { "value" : 117 }, { "value" : 116 }, { "value" : 485 }, { "value" : 108 }, { "value" : 113 }, { "value" : 449 }, { "value" : 113 }, { "value" : 126 }, { "value" : 424 }, { "value" : 100 }, { "value" : 111 }, { "value" : 433 }, { "value" : 96 }, { "value" : 107 }, { "value" : 367 }, { "value" : 118 }, { "value" : 94 }, { "value" : 392 }, { "value" : 127 }, { "value" : 110 }, { "value" : 412 }, { "value" : 142 }, { "value" : 103 }, { "value" : 419 }, { "value" : 120 }, { "value" : 93 }, { "value" : 443 }, { "value" : 139 }, { "value" : 90 }, { "value" : 537 }, { "value" : 135 }, { "value" : 77 }, { "value" : 598 }, { "value" : 149 }, { "value" : 82 }, { "value" : 658 }, { "value" : 135 }, { "value" : 82 }, { "value" : 692 }, { "value" : 134 }, { "value" : 71 }, { "value" : 811 }, { "value" : 158 }, { "value" : 78 }, { "value" : 665 }, { "value" : 161 }, { "value" : 76 }, { "value" : 755 }, { "value" : 166 }, { "value" : 69 }, { "value" : 881 }, { "value" : 225 }, { "value" : 77 }, { "value" : 795 }, { "value" : 242 }, { "value" : 63 }, { "value" : 759 }, { "value" : 262 }, { "value" : 79 }, { "value" : 710 }, { "value" : 360 }, { "value" : 69 }, { "value" : 809 }, { "value" : 382 }, { "value" : 90 }, { "value" : 785 }, { "value" : 481 }, { "value" : 73 }, { "value" : 940 }, { "value" : 498 }, { "value" : 70 }, { "value" : 778 }, { "value" : 614 }, { "value" : 88 }, { "value" : 820 }, { "value" : 787 }, { "value" : 76 }, { "value" : 705 }, { "value" : 1025 }, { "value" : 85 }, { "value" : 569 }, { "value" : 1198 }, { "value" : 122 }, { "value" : 511 }, { "value" : 1229 }, { "value" : 98 }, { "value" : 456 }, { "value" : 1262 }, { "value" : 90 }, { "value" : 404 }, { "value" : 1057 }, { "value" : 148 }, { "value" : 346 }, { "value" : 774 }, { "value" : 129 }, { "value" : 265 }, { "value" : 521 }, { "value" : 147 }, { "value" : 304 }, { "value" : 416 }, { "value" : 158 }, { "value" : 203 }, { "value" : 336 }, { "value" : 163 }, { "value" : 205 }, { "value" : 295 }, { "value" : 175 }, { "value" : 184 }, { "value" : 289 }, { "value" : 175 }, { "value" : 150 }, { "value" : 275 }, { "value" : 215 }, { "value" : 152 }, { "value" : 282 }, { "value" : 202 }, { "value" : 144 }, { "value" : 322 }, { "value" : 165 }, { "value" : 137 }, { "value" : 361 }, { "value" : 175 }, { "value" : 132 }, { "value" : 429 }, { "value" : 169 }, { "value" : 119 }, { "value" : 367 }, { "value" : 187 }, { "value" : 82 }, { "value" : 380 }, { "value" : 168 }, { "value" : 93 }, { "value" : 436 }, { "value" : 197 }, { "value" : 87 }, { "value" : 379 }, { "value" : 158 }, { "value" : 89 }, { "value" : 391 }, { "value" : 119 }, { "value" : 63 }, { "value" : 436 }, { "value" : 109 }, { "value" : 89 }, { "value" : 448 }, { "value" : 134 }, { "value" : 72 }, { "value" : 644 }, { "value" : 118 }, { "value" : 60 }, { "value" : 650 }, { "value" : 125 }, { "value" : 70 }, { "value" : 819 }, { "value" : 111 }, { "value" : 60 }, { "value" : 944 }, { "value" : 125 }, { "value" : 61 }, { "value" : 1124 }, { "value" : 116 }, { "value" : 62 }, { "value" : 1166 }, { "value" : 123 }, { "value" : 59 }, { "value" : 1304 }, { "value" : 137 }, { "value" : 55 }, { "value" : 1368 }, { "value" : 165 }, { "value" : 57 }, { "value" : 1452 }, { "value" : 184 }, { "value" : 40 }, { "value" : 1317 }, { "value" : 190 }, { "value" : 47 }, { "value" : 1335 }, { "value" : 230 }, { "value" : 44 }, { "value" : 1256 }, { "value" : 357 }, { "value" : 43 }, { "value" : 1204 }, { "value" : 277 }, { "value" : 54 }, { "value" : 1106 }, { "value" : 300 }, { "value" : 49 }, { "value" : 1063 }, { "value" : 265 }, { "value" : 40 }, { "value" : 911 }, { "value" : 260 }, { "value" : 34 }, { "value" : 835 }, { "value" : 232 }, { "value" : 23 }, { "value" : 669 }, { "value" : 256 }, { "value" : 34 }, { "value" : 572 }, { "value" : 259 }, { "value" : 36 }, { "value" : 379 }, { "value" : 257 }, { "value" : 35 }, { "value" : 245 }, { "value" : 263 }, { "value" : 30 }, { "value" : 184 }, { "value" : 274 }, { "value" : 31 }, { "value" : 160 }, { "value" : 257 }, { "value" : 30 }, { "value" : 128 }, { "value" : 259 }, { "value" : 23 }, { "value" : 106 }, { "value" : 231 }, { "value" : 25 }, { "value" : 79 }, { "value" : 256 }, { "value" : 20 }, { "value" : 65 }, { "value" : 221 }, { "value" : 38 }, { "value" : 66 }, { "value" : 217 }, { "value" : 24 }, { "value" : 49 }, { "value" : 199 }, { "value" : 24 }, { "value" : 45 }, { "value" : 153 }, { "value" : 21 }, { "value" : 50 }, { "value" : 168 }, { "value" : 17 }, { "value" : 56 }, { "value" : 169 }, { "value" : 24 }, { "value" : 43 }, { "value" : 162 }, { "value" : 18 }, { "value" : 42 }, { "value" : 163 }, { "value" : 15 }, { "value" : 46 }, { "value" : 169 }, { "value" : 21 }, { "value" : 29 }, { "value" : 154 }, { "value" : 20 }, { "value" : 21 }, { "value" : 174 }, { "value" : 14 }, { "value" : 40 }, { "value" : 150 }, { "value" : 21 }, { "value" : 31 }, { "value" : 164 }, { "value" : 20 }, { "value" : 24 }, { "value" : 151 }, { "value" : 13 }, { "value" : 22 }, { "value" : 178 }, { "value" : 17 }, { "value" : 19 }, { "value" : 144 }, { "value" : 13 }, { "value" : 13 }, { "value" : 139 }, { "value" : 13 }, { "value" : 20 }, { "value" : 137 }, { "value" : 19 }, { "value" : 11 }, { "value" : 122 }, { "value" : 15 }, { "value" : 16 }, { "value" : 104 }, { "value" : 14 }, { "value" : 12 }, { "value" : 123 }, { "value" : 19 }, { "value" : 11 }, { "value" : 152 }, { "value" : 18 }, { "value" : 8 }, { "value" : 140 }, { "value" : 21 }, { "value" : 5 }, { "value" : 144 }, { "value" : 16 }, { "value" : 11 }, { "value" : 119 }, { "value" : 14 }, { "value" : 7 }, { "value" : 154 }, { "value" : 18 }, { "value" : 13 }, { "value" : 144 }, { "value" : 21 }, { "value" : 9 }, { "value" : 172 }, { "value" : 20 }, { "value" : 7 }, { "value" : 179 }, { "value" : 15 }, { "value" : 11 }, { "value" : 219 }, { "value" : 18 }, { "value" : 9 }, { "value" : 198 }, { "value" : 16 }, { "value" : 13 }, { "value" : 185 }, { "value" : 24 }, { "value" : 11 }, { "value" : 168 }, { "value" : 17 }, { "value" : 6 }, { "value" : 149 }, { "value" : 29 }, { "value" : 11 }, { "value" : 116 }, { "value" : 30 }, { "value" : 12 }, { "value" : 132 }, { "value" : 34 }, { "value" : 8 }, { "value" : 85 }, { "value" : 27 }, { "value" : 6 }, { "value" : 69 }, { "value" : 34 }, { "value" : 3 }, { "value" : 79 }, { "value" : 25 }, { "value" : 12 }, { "value" : 51 }, { "value" : 34 }, { "value" : 6 }, { "value" : 35 }, { "value" : 34 }, { "value" : 6 }, { "value" : 50 }, { "value" : 38 }, { "value" : 8 }, { "value" : 32 }, { "value" : 46 }, { "value" : 13 }, { "value" : 43 }, { "value" : 41 }, { "value" : 4 }, { "value" : 33 }, { "value" : 34 }, { "value" : 6 }, { "value" : 32 }, { "value" : 45 }, { "value" : 9 }, { "value" : 28 }, { "value" : 44 }, { "value" : 5 }, { "value" : 30 }, { "value" : 31 }, { "value" : 14 }, { "value" : 16 }, { "value" : 33 }, { "value" : 10 }, { "value" : 21 }, { "value" : 35 }, { "value" : 10 }, { "value" : 27 }, { "value" : 36 }, { "value" : 6 }, { "value" : 12 }, { "value" : 25 }, { "value" : 12 }, { "value" : 18 }, { "value" : 39 }, { "value" : 20 }, { "value" : 12 }, { "value" : 35 }, { "value" : 16 }, { "value" : 9 }, { "value" : 26 }, { "value" : 18 }, { "value" : 12 }, { "value" : 28 }, { "value" : 16 }, { "value" : 20 }, { "value" : 31 }, { "value" : 27 }, { "value" : 15 }, { "value" : 32 }, { "value" : 19 }, { "value" : 14 }, { "value" : 28 }, { "value" : 34 }, { "value" : 9 }, { "value" : 20 }, { "value" : 34 }, { "value" : 12 }, { "value" : 11 }, { "value" : 37 }, { "value" : 6 }, { "value" : 18 }, { "value" : 36 }, { "value" : 9 }, { "value" : 14 }, { "value" : 44 }, { "value" : 12 }, { "value" : 19 }, { "value" : 56 }, { "value" : 2 }, { "value" : 16 }, { "value" : 50 }, { "value" : 8 }, { "value" : 9 }, { "value" : 60 }, { "value" : 5 }, { "value" : 9 }, { "value" : 58 }, { "value" : 4 }, { "value" : 9 }, { "value" : 55 }, { "value" : 7 }, { "value" : 8 }, { "value" : 50 }, { "value" : 1 }, { "value" : 5 }, { "value" : 52 }, { "value" : 2 }, { "value" : 2 }, { "value" : 60 }, { "value" : 2 }, { "value" : 4 }, { "value" : 36 }, { "value" : 2 } ] }');    
+    
+var n = 3, // number of layers
+    m = data['colorPerBand'], // number of samples per layer
+    colorClassGap = 0,
+    stack = d3.layout.stack(),
+    layers = stack(d3.range(n).map(function() { return bumpLayer(); })),
+    yGroupMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y; }); }),
+    yStackMax = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
+
+var margin = {top: 50, right: 50, bottom: 50, left: 50},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.scale.ordinal()
+    .domain(d3.range(m))
+    .rangeRoundBands([0, width], .08);
+
+var y = d3.scale.linear()
+    .domain([0, yStackMax])
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .tickSize(10)
+    .tickPadding(3)
+    .tickValues(d3.range(0, m-1, 10))
+    .orient("bottom");
+    
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var layer = svg.selectAll(".layer")
+    .data(layers)
+  .enter().append("g")
+    .attr("class", "layer")
+    .attr("class", function(d, i) { return band(i); })
+    .style("fill", function(d, i) { return color(i); });
+
+var rect = layer.selectAll("rect")
+    .data(function(d) { return d; })
+  .enter().append("rect")
+    .attr("x", function(d) { return x(d.x); })
+    .attr("y", height)
+    .attr("width", x.rangeBand())
+    .attr("height", 0);
+
+rect.transition()
+    .delay(function(d, i) { return i * 10; })
+    .attr("y", function(d) { return y(d.y0 + d.y); })
+    .attr("height", function(d) { return y(d.y0) - y(d.y0 + d.y); })
+    .attr("index", function(d, i) { return i; })
+    .attr("value", function(d) { return d.y; });
+
+svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+    
+svg.append("g")
+    .attr("class", "y axis")
+    .attr("transform", "translate(0,0)")
+    .call(yAxis);
+
+d3.selectAll("input").on("change", change);
+
+$('rect').click(function () {
+    console.log($(this).parent().attr('class') + '(' + $(this).attr('index') + ') = ' + $(this).attr('value'));
+});
+
+var timeout = setTimeout(function() {
+  d3.select("input[value=\"grouped\"]").property("checked", true).each(change);
+}, 2000);
+
+function color(i) {
+    switch (i) {
+        case 0: return '#ff0000';
+        case 1: return '#00ff00';
+        case 2: return '#0000ff';
+    }
+}
+    
+function band(i) {
+    switch (i) {
+        case 0: return 'red';
+        case 1: return 'green';
+        case 2: return 'blue';
+    }
+}
+    
+function change() {
+  clearTimeout(timeout);
+  if (this.value === "grouped") transitionGrouped();
+  else transitionStacked();
+}
+
+function transitionGrouped() {
+  y.domain([0, yGroupMax]);
+
+  rect.transition()
+      .duration(500)
+      .delay(function(d, i) { return i * 10; })
+      .attr("x", function(d, i, j) { return x(d.x) + x.rangeBand() / n * j; })
+      .attr("width", x.rangeBand() / n)
+    .transition()
+      .attr("y", function(d) { return y(d.y); })
+      .attr("height", function(d) { return height - y(d.y); });
+}
+
+function transitionStacked() {
+  y.domain([0, yStackMax]);
+
+  rect.transition()
+      .duration(500)
+      .delay(function(d, i) { return i * 10; })
+      .attr("y", function(d) { return y(d.y0 + d.y); })
+      .attr("height", function(d) { return y(d.y0) - y(d.y0 + d.y); })
+    .transition()
+      .attr("x", function(d) { return x(d.x); })
+      .attr("width", x.rangeBand());
+}
+
+// Inspired by Lee Byron's test data generator.
+function bumpLayer() {
+  var a = [], i;
+    
+  for (i = 0; i < data['colorPerBand']; ++i) a[i] = data['points'][i+colorClassGap]['value'];
+  colorClassGap += data['colorPerBand'];
+    
+  return a.map(function(d, i) { return {x: i, y: Math.max(0, d)}; });
+}
+
+</script>
